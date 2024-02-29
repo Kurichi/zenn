@@ -18,7 +18,8 @@ Cloudflare Pages で Hono テンプレートを使って Stripe を動かした�
   _worker.js:1:106: ERROR: Could not resolve "https"
   _worker.js:1:128: ERROR: Could not resolve "util"
 ```
-`vite.config.js` で `build.rollupOptions.external` に `stripe` を設定することで回避した。
+~~`vite.config.js` で `build.rollupOptions.external` に `stripe` を設定することで回避した。~~
+**2024/02/29 追記：`vite.config.js` で `ssr.target` を `webworker` に設定することで回避した．**
 
 # やったこと
 まずは、エラーが発生するまでの流れを書いておきます。
@@ -191,8 +192,9 @@ $ pnpm wrangler pages dev dist --compatibility-flags=nodejs_compat
 しかし、同じエラーが発生しました。
 
 # 解決策
-最終的に、`vite.config.js` に `build.rollupOptions.external` を設定することで解決しました。
-```js:vite.config.js
+~~最終的に、`vite.config.js` に `build.rollupOptions.external` を設定することで解決しました。~~
+**2024/02/29 追記：`vite.config.js` で `ssr.target` を `webworker` に設定することで解決した．**
+```diff js:vite.config.js
 import build from "@hono/vite-cloudflare-pages";
 import devServer from "@hono/vite-dev-server";
 import { defineConfig } from "vite";
@@ -204,11 +206,14 @@ export default defineConfig({
 			entry: "src/index.tsx",
 		}),
 	],
-	build: {
-		rollupOptions: {
-			external: ["stripe"],
-		},
-	},
+-	build: {
+-		rollupOptions: {
+-			external: ["stripe"],
+-		},
+-	},
++	ssr: {
++		target: "webworker",
++	},
 });
 ```
 
