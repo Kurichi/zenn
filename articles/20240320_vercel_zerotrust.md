@@ -1,5 +1,5 @@
 ---
-title: "Cloudflare Zero Trust と Vercel でお手軽ステージング環境"
+title: "Cloudflare Zero Trust Access と Vercel でお手軽ステージング環境"
 emoji: "👻"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["cloudflare", "vercel"]
